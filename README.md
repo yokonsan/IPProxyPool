@@ -46,10 +46,10 @@ pip install -r requirements.txt
 import requests
 
 def get_proxy():
-	resp = requests.get('http://127.0.0.1:5000/get')
-	proxy = resp.text
-	ip = 'http://' + proxy
-	return ip
+    resp = requests.get('http://127.0.0.1:5000/get')
+    proxy = resp.text
+    ip = 'http://' + proxy
+    return ip
 ```
 
 ### Enjoy it

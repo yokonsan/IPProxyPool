@@ -4,13 +4,13 @@ from config import *
 
 class MongodbClient(object):
 
-    def __init__(self):
-        self.name = NAME
+    def __init__(self, table=TABLE):
+        self.table = table
         self.client = MongoClient(HOST, PORT)
-        self.db = self.client.proxy
+        self.db = self.client[NAME]
 
-    def change_table(self, name):
-        self.name = name
+    def change_table(self, table):
+        self.table = table
 
     def proxy_num(self):
         """
@@ -18,7 +18,7 @@ class MongodbClient(object):
         """
         if self.get_nums != 0:
             self.sort()
-            datas = [i for i in self.db[self.name].find()]
+            datas = [i for i in self.db[self.table].find()]
             nums = []
             for data in datas:
                 nums.append(data['num'])
@@ -32,7 +32,7 @@ class MongodbClient(object):
         """
         if self.get_nums != 0:
             self.sort()
-            datas = [i for i in self.db[self.name].find()][0:count]
+            datas = [i for i in self.db[self.table].find()][0:count]
             proxies = []
             for data in datas:
                 proxies.append(data['proxy'])
@@ -44,11 +44,11 @@ class MongodbClient(object):
         放置代理到数据库
         """
         num = self.proxy_num() + 1
-        if self.db[self.name].find_one({'proxy': proxy}):
+        if self.db[self.table].find_one({'proxy': proxy}):
             self.delete(proxy)
-            self.db[self.name].insert({'proxy': proxy, 'num': num})
+            self.db[self.table].insert({'proxy': proxy, 'num': num})
         else:
-            self.db[self.name].insert({'proxy': proxy, 'num': num})
+            self.db[self.table].insert({'proxy': proxy, 'num': num})
 
     def pop(self):
         """
@@ -56,7 +56,7 @@ class MongodbClient(object):
         """
         if self.get_nums != 0:
             self.sort()
-            data = [i for i in self.db[self.name].find()][-1]
+            data = [i for i in self.db[self.table].find()][-1]
             proxy =  data['proxy'] if data != None else None
             # 取出来使用后就从池中移除
             self.delete(proxy)
@@ -67,13 +67,13 @@ class MongodbClient(object):
         """
         如果代理没有通过检查，就删除
         """
-        self.db[self.name].remove({'proxy': value})
+        self.db[self.table].remove({'proxy': value})
 
     def sort(self):
         """
         按num键的大小升序
         """
-        self.db[self.name].find().sort('num', ASCENDING)
+        self.db[self.table].find().sort('num', ASCENDING)
 
     def clean(self):
         """
@@ -86,4 +86,4 @@ class MongodbClient(object):
         """
         得到数据库代理总数
         """
-        return self.db[self.name].count()
+        return self.db[self.table].count()

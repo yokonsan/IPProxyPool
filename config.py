@@ -1,5 +1,6 @@
 # Mongodb数据库
 NAME = 'proxy'
+TABLE = 'proxy'
 HOST = 'localhost'
 PORT = 27017
 

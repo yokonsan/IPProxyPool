@@ -3,7 +3,7 @@ from lxml import etree
 from .utils import parse_url
 
 "http://www.ip181.com/"
-"http://www.goubanjia.com/free/gngn/index.shtml"
+"https://ip.ihuan.me/?page=1&address=5Lit5Zu9"
 "http://www.66ip.cn/areaindex_1/1.html"
 "http://www.kuaidaili.com/free/inha/"
 "http://www.xicidaili.com/"
@@ -78,3 +78,14 @@ class ProxyGetter(object, metaclass=ProxyMetaclass):
                     yield proxy
             except:
                 pass
+
+    def proxy_ihuan(self):
+        for page in range(1, 4):
+            url = 'https://ip.ihuan.me/?page={0}&address=5Lit5Zu9'.format(page)
+            resp = parse_url(url)
+            html = etree.HTML(resp)
+            ips = html.xpath('/html/body/div[2]/div[2]/table/tbody/tr/td[1]/a/text()')
+            ports = html.xpath('/html/body/div[2]/div[2]/table/tbody/tr/td[2]/text()')
+            for ip, port in zip(ips, ports):
+                proxy = ip + ':' + port
+                yield proxy

@@ -2,7 +2,7 @@ import asyncio
 import aiohttp
 
 from ProxyPool.db import MongodbClient
-from config import GET_PROXY_TIMEOUT, TEST_URL
+from config import TEST_URL
 
 
 class ProxyTester(object):
@@ -27,7 +27,7 @@ class ProxyTester(object):
                         proxy = proxy.decode('utf-8')
                     real_proxy = 'http://' + proxy
                     print('Testing', proxy)
-                    async with session.get(self.test_url, proxy=real_proxy, timeout=GET_PROXY_TIMEOUT) as response:
+                    async with session.get(self.test_url, proxy=real_proxy, timeout=10) as response:
                         if response.status == 200:
                             self._conn.put(proxy)
                             print('Valid proxy', proxy)

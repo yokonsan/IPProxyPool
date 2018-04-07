@@ -17,8 +17,8 @@ class ProxyMetaclass(type):
     def __new__(cls, name, bases, attrs):
         count = 0
         attrs['__CrawlFunc__'] = []
-        for k, v in attrs.items():
-            if 'proxy_' in k:
+        for k in attrs.keys():
+            if k.startswith('proxy_'):
                 attrs['__CrawlFunc__'].append(k)
                 count += 1
         attrs['__CrawlFuncCount__'] = count
@@ -59,8 +59,8 @@ class ProxyGetter(object, metaclass=ProxyMetaclass):
         url = 'http://www.xicidaili.com/'
         resp = parse_url(url)
         html = etree.HTML(resp)
-        ips = html.xpath('//*[@id="ip_list"]/tr[@class="odd"]/td[2]/text()')
-        ports = html.xpath('//*[@id="ip_list"]/tr[@class="odd"]/td[3]/text()')
+        ips = html.xpath('//*[@id="ip_list"]/tr/td[2]/text()')
+        ports = html.xpath('//*[@id="ip_list"]/tr/td[3]/text()')
         for ip, port in zip(ips, ports):
             proxy = ip + ':' + port
             yield proxy

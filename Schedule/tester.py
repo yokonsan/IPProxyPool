@@ -10,7 +10,6 @@ class ProxyTester(object):
 
     def __init__(self):
         self._raw_proxies = None
-        self._usable_proxies = []
 
     def set_raw_proxies(self, proxies):
         self._raw_proxies = proxies
@@ -18,7 +17,7 @@ class ProxyTester(object):
 
     async def test_single_proxy(self, proxy):
         """
-        测试一个代理，如果有效，将他放入usable-proxies
+        测试一个代理，如果有效，将他放入数据库
         """
         try:
             async with aiohttp.ClientSession() as session:

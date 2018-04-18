@@ -36,7 +36,8 @@ class MongodbClient(object):
             proxies = []
             for data in datas:
                 proxies.append(data['proxy'])
-            return [proxy for proxy in proxies]
+                self.delete(data['proxy'])
+            return proxies
         return None
 
     def put(self, proxy):

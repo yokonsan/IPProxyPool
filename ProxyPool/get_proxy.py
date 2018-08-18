@@ -1,12 +1,7 @@
 # coding=utf-8
 from lxml import etree
-from .utils import parse_url
+from ProxyPool.utils import parse_url
 
-"http://www.ip181.com/"
-"https://ip.ihuan.me/?page=1&address=5Lit5Zu9"
-"http://www.66ip.cn/areaindex_1/1.html"
-"http://www.kuaidaili.com/free/inha/"
-"http://www.xicidaili.com/"
 
 class ProxyMetaclass(type):
     """
@@ -26,23 +21,18 @@ class ProxyMetaclass(type):
 
 
 class ProxyGetter(object, metaclass=ProxyMetaclass):
-
+    """
+    source:
+        "http://www.66ip.cn/areaindex_1/1.html"
+        "http://www.kuaidaili.com/free/inha/"
+        "http://www.xicidaili.com/"
+    """
     def get_raw_proxies(self, callback):
         proxies = []
         for proxy in eval("self.{}()".format(callback)):
             print('Getting', proxy, 'from', callback)
             proxies.append(proxy)
         return proxies
-
-    def proxy_ip181(self):
-        url = 'http://www.ip181.com/'
-        resp = parse_url(url)
-        html = etree.HTML(resp)
-        ips = html.xpath('//div[2]/div[1]/div[2]/div/div[2]/table/tbody/tr/td[1]/text()')[1:]
-        ports = html.xpath('//div[2]/div[1]/div[2]/div/div[2]/table/tbody/tr/td[2]/text()')[1:]
-        for ip, port in zip(ips, ports):
-            proxy = ip + ':' + port
-            yield proxy
 
     def proxy_ip66(self):
         for page in range(1, 9):
@@ -79,13 +69,6 @@ class ProxyGetter(object, metaclass=ProxyMetaclass):
             except:
                 pass
 
-    def proxy_ihuan(self):
-        for page in range(1, 4):
-            url = 'https://ip.ihuan.me/?page={0}&address=5Lit5Zu9'.format(page)
-            resp = parse_url(url)
-            html = etree.HTML(resp)
-            ips = html.xpath('/html/body/div[2]/div[2]/table/tbody/tr/td[1]/a/text()')
-            ports = html.xpath('/html/body/div[2]/div[2]/table/tbody/tr/td[2]/text()')
-            for ip, port in zip(ips, ports):
-                proxy = ip + ':' + port
-                yield proxy
+
+if __name__ == '__main__':
+    pass
